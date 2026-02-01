@@ -1,3 +1,36 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import Navbar from '@/components/layout/Navbar';
+import { Toaster } from 'react-hot-toast';
+//google font
+import { Anuphan } from 'next/font/google';
+import './globals.css';
+import Footer from '@/components/layout/Footer';
+// ตั้งค่าฟอนต์
+const anuphan = Anuphan({
+  subsets: ['thai', 'latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-anuphan', // กำหนดเป็น CSS Variable
+  display: 'swap',
+});
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="th" className={anuphan.variable}>
+      <body className="antialiased font-sans">
+        <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+          <Navbar />
+          {children}
+          <Footer />
+          <Toaster position="top-center" reverseOrder={false} />
+        </GoogleOAuthProvider>
+      </body>
+    </html>
+  );
+}
+
+
+
+/*
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -32,3 +65,4 @@ export default function RootLayout({
     </html>
   );
 }
+*/
