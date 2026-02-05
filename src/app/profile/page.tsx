@@ -56,9 +56,9 @@ export default function ProfilePage() {
             <p className="text-blue-600 mb-8">{user?.faculty_name}</p>
 
             <div className="space-y-4 text-left">
-              <ProfileInfoItem icon={<Hash size={18} />} label="รหัสนิสิต" value={user?.student_id} />
+              <ProfileInfoItem icon={<Hash size={18} />} label="รหัส" value={user?.id} />
               <ProfileInfoItem icon={<School size={18} />} label="สังกัดคณะ" value={user?.faculty_name} />
-              <ProfileInfoItem icon={<Mail size={18} />} label="อีเมลมหาวิทยาลัย" value={`${user?.student_id}@msu.ac.th`} />
+              <ProfileInfoItem icon={<Mail size={18} />} label="อีเมลมหาวิทยาลัย" value={`${user?.email}`} />
             </div>
 
             {/* ส่วนแสดงสถานะการโหวต */}
@@ -95,7 +95,7 @@ function ProfileInfoItem({ icon, label, value }: { icon: any, label: string, val
         {icon}
       </div>
       <div>
-        <p className="text-[12px]  tracking-widest text-slate-400 uppercase tracking-tight">{label}</p>
+        <p className="text-[12px]  tracking-widest text-slate-400 uppercase ">{label}</p>
         <p className="  text-slate-700">{value || 'ไม่ระบุ'}</p>
       </div>
     </div>

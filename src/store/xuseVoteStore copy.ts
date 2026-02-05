@@ -57,9 +57,9 @@ export const useVoteStore = create<VoteState>()(
             // ดึงค่า has_voted จาก JWT โดยตรง ไม่ต้องพึ่ง Cookie ตัวอื่น
             set({
               user: {
-                student_id: decoded.student_id,
+                id: decoded.id,
                 name: decoded.name,
-                faculty_id: decoded.faculty_id,
+                faculty_code: decoded.faculty_code,
                 faculty_name: decoded.faculty_name,
                 has_voted: decoded.has_voted // ค่าจาก JWT เป็นหลัก
               },

@@ -9,15 +9,27 @@
   /* เชื่อมโยง CSS Variable จาก Next Font เข้ากับ theme ของ Tailwind */
   --font-sans: var(--font-anuphan), ui-sans-serif, system-ui, sans-serif;
 
+  /* Headings */
+  --font-size-h1: 2rem;      /* 32px */
+  --font-size-h2: 1.5rem;    /* 24px */
+  --font-size-h3: 1.25rem;   /* 20px */
+  --font-size-h4: 1.125rem;  /* 18px */
+
+  /* Body */
+  --font-size-body: 1rem;       /* 16px */
+  --font-size-small: 0.875rem;  /* 14px */
+  --font-size-caption: 0.75rem; /* 12px */
+
+
   /* --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono); */
 
   /* ตั้งค่าสีประจำบัตรเลือกตั้ง */
-  --color-ballot-yellow: #fde047; /* องค์การ */
-  --color-ballot-pink: #f472b6;   /* สโมสร */
-  --color-ballot-blue: #60a5fa;   /* สภา */
+  --color-ballot-yellow: #fee047; /* องค์การ */
+  --color-ballot-pink: #ff72b6;   /* สโมสร */
+  --color-ballot-blue: #11aaff;   /* สภา */
   
   /* เพิ่ม Animation เล็กน้อยตอนกดเลือก */
   --animate-selection: pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1);
@@ -43,4 +55,28 @@ body {
   body {
     @apply font-sans text-slate-900;
   }
+}
+
+/* ===== Custom Scrollbar ===== */
+.scrollbar-thin {
+  scrollbar-width: thin;              /* Firefox */
+  scrollbar-color: #3b82f6 transparent;
+}
+
+/* Chrome, Edge, Safari */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #3b82f6;           /* blue-500 */
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #2563eb;           /* blue-600 */
 }

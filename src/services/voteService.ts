@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 export const voteService = {
   // ดึงรายชื่อผู้สมัคร
   getCandidates: async () => {
-    const response = await axiosInstance.get('/candidates');
+    const response = await axiosInstance.get('/candidates/getballots');
     return response.data;
   },
 

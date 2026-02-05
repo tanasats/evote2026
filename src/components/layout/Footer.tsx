@@ -7,7 +7,8 @@ export default function Footer() {
 
   return (
     <footer className="w-full bg-white border-t border-slate-100 pt-12 pb-8">
-      <div className="max-w-7xl mx-auto px-4">
+      {/* <div className="max-w-7xl mx-auto px-4"> */}
+      <div className="max-w-full mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8 border-b border-slate-300">
           
           {/* ส่วนซ้าย: Copyright & Description */}

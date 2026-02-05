@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useVoteStore } from '@/store/useVoteStore';
 import { voteService } from '@/services/voteService';
-import { CheckCircle2, ArrowLeft, Send, AlertTriangle } from 'lucide-react';
+import { CheckCircle2, ArrowLeft, Send, AlertTriangle, Loader2 } from 'lucide-react';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import toast from 'react-hot-toast';
 
@@ -12,6 +12,7 @@ export default function SummaryPage() {
   const { organizationId, clubId, councilIds, candidatesData, resetVotes, setHasVoted } = useVoteStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   // ฟังก์ชันช่วยดึงข้อมูลผู้สมัครจาก Cache ใน Zustand
   const getCandidateInfo = (type: 'organization' | 'club' | 'council', id: number | null) => {
@@ -25,20 +26,21 @@ export default function SummaryPage() {
   };
 
   const handleFinalSubmit = async () => {
-    //const confirmVote = confirm("ยืนยันหย่อนบัตร? เมื่อยืนยันแล้วจะไม่สามารถแก้ไขได้");
-    //if (!confirmVote) return;
     setIsModalOpen(false); // ปิด Modal ก่อนเริ่มบันทึก
     setIsSubmitting(true);
-
     try {
       const response = await voteService.submitVote({
         organizationId,
         clubId,
         councilIds
       });
-      setHasVoted(true);
-      resetVotes();
+      setProcessing(true);
       router.push(`/success?ref=${response.ref_code}`);
+      toast.success("บันทึกข้อมูลสำเร็จ");
+      setIsSubmitting(false);
+      setHasVoted(true);
+      //resetVotes();
+      //setProcessing(false);
     } catch (error: any) {
       //alert(error.response?.data?.message || "เกิดข้อผิดพลาดในการบันทึกคะแนน");
       const msg = error.response?.data?.message || "เกิดข้อผิดพลาดในการบันทึกคะแนน"
@@ -46,6 +48,13 @@ export default function SummaryPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (processing) return (
+    <div className="min-h-screen flex flex-col h-96 items-center justify-center space-y-4">
+      <Loader2 className="animate-spin text-blue-600" size={48} />
+      <p className="text-slate-500 font-bold">กำลังประมวลผล...</p>
+    </div>
+  );
 
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8 pb-32">
@@ -57,7 +66,6 @@ export default function SummaryPage() {
           <h1 className="text-3xl font-black text-slate-800">ตรวจสอบข้อมูลการลงคะแนน</h1>
           <p className="text-slate-500 mt-2">โปรดอ่านทบทวนรายชื่อและหมายเลขที่ท่านเลือกอีกครั้ง</p>
         </header>
-
         <div className="space-y-6">
           {/* 1. องค์การนิสิต */}
           <SummaryItem
@@ -74,7 +82,7 @@ export default function SummaryPage() {
           />
 
           {/* 3. สภานิสิต (กรณีเลือกได้หลายคน) */}
-          <div className="p-1 rounded-[2rem] bg-ballot-blue shadow-sm">
+          <div className="p-1 rounded-4xl bg-ballot-blue shadow-sm">
             <div className="bg-white p-6 rounded-[1.8rem]">
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">บัตรเลือกตั้งสภานิสิต</h3>
               {councilIds.includes(0) ? (
@@ -117,7 +125,7 @@ export default function SummaryPage() {
           <button
             onClick={() => router.back()}
             disabled={isSubmitting}
-            className="flex-1 py-4 font-bold text-slate-500 hover:text-slate-800 transition-colors"
+            className="flex-1 py-4 font-bold bg-slate-100 text-slate-800 hover:bg-slate-200 transition-colors rounded-2xl"
           >
             ย้อนกลับไปแก้ไข
           </button>
@@ -125,8 +133,8 @@ export default function SummaryPage() {
             //onClick={handleFinalSubmit}
             onClick={() => setIsModalOpen(true)}
             disabled={isSubmitting}
-            className={`flex-[2] py-4 rounded-2xl font-black text-xl text-white shadow-xl transition-all active:scale-95
-              ${isSubmitting ? 'bg-slate-400' : 'bg-slate-900 hover:bg-black shadow-slate-200'}`}
+            className={`flex-2 py-4 rounded-2xl font-black text-xl text-white shadow-xl transition-all active:scale-95
+              ${isSubmitting ? 'bg-slate-400' : 'bg-green-600 hover:bg-green-700 shadow-slate-200'}`}
           >
             {isSubmitting ? 'กำลังส่งข้อมูล...' : 'ยืนยันหย่อนบัตร'}
           </button>
@@ -151,7 +159,7 @@ export default function SummaryPage() {
 // Sub-component สำหรับความสะอาดของโค้ด
 function SummaryItem({ title, info, colorClass }: any) {
   return (
-    <div className={`p-1 rounded-[2rem] ${colorClass} shadow-sm`}>
+    <div className={`p-1 rounded-4xl ${colorClass} shadow-sm`}>
       <div className="bg-white p-6 rounded-[1.8rem] flex justify-between items-center">
         <div>
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{title}</h3>

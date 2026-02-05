@@ -55,7 +55,7 @@ export default function ConfirmModal({
       />
       
       {/* Modal Box */}
-      <div className="relative bg-white w-full max-w-[400px] rounded-[2.5rem] p-8 md:p-10 shadow-2xl z-[10000] animate-in fade-in zoom-in slide-in-from-bottom-4 duration-300">
+      <div className="relative bg-white w-full max-w-100 rounded-3xl p-8 md:p-10 shadow-2xl z-10000 animate-in fade-in zoom-in slide-in-from-bottom-4 duration-300">
         <button onClick={onClose} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600">
           <X size={20} />
         </button>
@@ -69,7 +69,7 @@ export default function ConfirmModal({
             <button onClick={onConfirm} className={`w-full py-4 rounded-2xl text-white font-black text-lg shadow-lg active:scale-95 transition-all ${colors[type]}`}>
               {confirmText}
             </button>
-            <button onClick={onClose} className="w-full py-4 rounded-2xl text-slate-400 font-bold hover:text-slate-700 hover:bg-slate-50 transition-all">
+            <button onClick={onClose} className="w-full py-4 rounded-2xl text-slate-800 font-bold  bg-slate-100 hover:bg-slate-200 transition-all">
               ยกเลิก
             </button>
           </div>

@@ -2,12 +2,12 @@
 import { useSearchParams, useRouter } from 'next/navigation';
 import { CheckCircle, Home, Download, LogOut, Heart } from 'lucide-react';
 import { useVoteStore } from '@/store/useVoteStore'; // Import Store เข้ามา
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 
 function SuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { logout } = useVoteStore(); // ดึงฟังก์ชัน logout มาใช้
+  const { logout,resetVotes } = useVoteStore(); // ดึงฟังก์ชัน logout มาใช้
 
   const refCode = searchParams.get('ref') || 'N/A';
   const today = new Date().toLocaleDateString('th-TH', {
@@ -19,6 +19,11 @@ function SuccessContent() {
   const handleInstantLogout = () => {
     logout(router); // ฟังก์ชันนี้จะลบ Cookie, ล้าง Store และส่งไปหน้า / อัตโนมัติ
   };
+  
+  useEffect(() => {
+    resetVotes();
+  }, []);
+
 
   return (
     <main className="min-h-[calc(100vh-64px)] bg-slate-50 flex items-center justify-center p-4 py-12">
@@ -40,7 +45,7 @@ function SuccessContent() {
               <div>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">รหัสอ้างอิงการลงคะแนน</p>
                 <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl py-4 px-6 inline-block">
-                  <div className="w-64 wrap-break-word text-3xl font-black text-slate-800">
+                  <div className="w-64 wrap-break-word text-3xl text-slate-800">
                     {refCode}
                   </div>
                 </div>
@@ -64,7 +69,8 @@ function SuccessContent() {
               {/* 1. ปุ่มบันทึกใบยืนยัน */}
               <button
                 onClick={() => window.print()}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-slate-900 text-white rounded-2xl font-black hover:bg-black transition-all active:scale-95 shadow-lg shadow-slate-200"
+                className="w-full flex items-center justify-center gap-2 py-4
+                 bg-blue-700 text-white rounded-2xl font-black hover:bg-blue-800  transition-all active:scale-95"
               >
                 <Download size={18} /> บันทึกใบยืนยัน
               </button>
@@ -73,7 +79,8 @@ function SuccessContent() {
                 {/* 2. ปุ่มกลับหน้าหลัก (ไม่ Logout) */}
                 <button
                   onClick={() => router.push('/')}
-                  className="flex items-center justify-center gap-2 py-4 bg-slate-50 text-slate-700 font-bold rounded-2xl hover:bg-slate-100 transition-all active:scale-95"
+                  className="flex items-center justify-center gap-2 py-4 
+                  bg-slate-100 text-slate-700 font-bold rounded-2xl hover:bg-slate-200 transition-all active:scale-95"
                 >
                   <Home size={18} /> กลับหน้าหลัก
                 </button>
@@ -83,7 +90,7 @@ function SuccessContent() {
                   onClick={handleInstantLogout}
                   className="flex items-center justify-center gap-2 py-4 bg-red-50 text-red-600 font-bold rounded-2xl hover:bg-red-100 transition-all active:scale-95"
                 >
-                  <LogOut size={18} /> ออกจากระบบ
+                  <LogOut size={18} /> ออกจากระบบทันที
                 </button>
               </div>
             </div>

@@ -19,11 +19,10 @@ export default function CandidateCard({ candidate, isSelected, onSelect, ballotC
   return (
     <div
       onClick={() => onSelect(candidate.id)}
-      className={`relative group cursor-pointer transition-all duration-300 active:scale-95 ${
-        isSelected 
-          ? 'scale-[1.02] z-10' 
-          : 'hover:translate-y-[-4px]'
-      }`}
+      className={`relative group cursor-pointer transition-all duration-300 active:scale-95 ${isSelected
+        ? 'scale-[1.02] z-10'
+        : 'hover:translate-y-[-4px]'
+        }`}
     >
       <div className={`
         bg-white rounded-3xl overflow-hidden shadow-sm border-4 transition-all duration-300
@@ -39,13 +38,13 @@ export default function CandidateCard({ candidate, isSelected, onSelect, ballotC
         </div>
 
         {/* Candidate Image */}
-        <div className="aspect-[3/4] relative bg-slate-100">
-          <Image
-            src={candidate.image_url || '/placeholder-avatar.png'}
+        <div className="aspect-3/4 relative bg-slate-100">
+          <img
+            src={`${process.env.NEXT_PUBLIC_IMAGES_URL}${candidate.image_url}`}
             alt={candidate.name}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            className="object-cover w-full h-full" 
           />
+
           {/* Selected Overlay */}
           {isSelected && (
             <div className="absolute inset-0 bg-green-500/10 flex items-center justify-center">
@@ -60,11 +59,11 @@ export default function CandidateCard({ candidate, isSelected, onSelect, ballotC
 
         {/* Info Area */}
         <div className="p-4 text-center bg-white">
-          <p className="text-slate-800 font-black text-lg truncate leading-tight">
+          <p className="text-blue-800 font-black text-lg truncate leading-tight">
             {candidate.name}
           </p>
-          <p className="text-slate-400 text-xs mt-1 font-medium">
-            หมายเลข {candidate.candidate_number}
+          <p className="text-blue-600 mt-1 font-medium">
+            หมายเลข <span className="font-black text-2xl">{candidate.candidate_number}</span>
           </p>
         </div>
       </div>
