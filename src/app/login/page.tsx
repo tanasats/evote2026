@@ -55,7 +55,7 @@ export default function LoginPage() {
       } else {
 
         if(data.user.role == 'MEMBER')
-        router.push('/voting');
+        router.push('/');
         else if(data.user.role == 'ADMIN' || data.user.role == 'SUPER_ADMIN')
         router.push('/admin/dashboard');
       }
@@ -77,7 +77,7 @@ export default function LoginPage() {
 
         <div className="bg-blue-50 p100/50 p-6 rounded-2xl mb-8">
           <p className="text text-slate-800 leading-relaxed">
-            กรุณาเข้าสู่ระบบด้วย <br/>**Google Account (@msu.ac.th)**<br/> เพื่อตรวจสอบสิทธิ์ และเริ่มลงคะแนน
+            กรุณาเข้าสู่ระบบด้วย <br/>**Google Account (@msu.ac.th)**<br/>
           </p>
         </div>
 

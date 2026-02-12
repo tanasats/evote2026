@@ -1,18 +1,72 @@
 'use client'
 import Link from 'next/link';
 import { useVoteStore } from '@/store/useVoteStore';
-import { ArrowRight, Newspaper, Calendar, ShieldCheck, Heart, CheckCircle, LayoutGrid, GraduationCap } from 'lucide-react';
-import { useEffect } from 'react';
+import { 
+  ArrowRight, Newspaper, Calendar, ShieldCheck, 
+  Heart, CheckCircle, LayoutGrid, GraduationCap, 
+  Clock, UserCheck, Loader2 
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import adminService from '@/services/adminService';
 
 export default function LandingPage() {
-
-
   const { isLoggedIn, user, checkAuth } = useVoteStore();
+  
+  // --- States สำหรับเวลา ---
+  const [electionTime, setElectionTime] = useState<{start: Date, end: Date} | null>(null);
+  const [timeLeft, setTimeLeft] = useState<{days: number, hours: number, minutes: number, seconds: number} | null>(null);
+  const [systemStatus, setSystemStatus] = useState<'UPCOMING' | 'LIVE' | 'CLOSED'>('UPCOMING');
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     checkAuth();
+    fetchSystemSettings();
   }, [checkAuth]);
 
+  // ดึงเวลาเปิด-ปิดจาก Database
+  const fetchSystemSettings = async () => {
+    try {
+      const settings = await adminService.getSystemSettings();
+      if (settings.start_time && settings.end_time) {
+        setElectionTime({
+          start: new Date(settings.start_time),
+          end: new Date(settings.end_time)
+        });
+      }
+    } catch (err) {
+      console.error("Failed to load settings", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Logic การนับถอยหลังและเช็คสถานะ
+  useEffect(() => {
+    if (!electionTime) return;
+
+    const timer = setInterval(() => {
+      const now = new Date();
+      
+      if (now < electionTime.start) {
+        setSystemStatus('UPCOMING');
+        const diff = electionTime.start.getTime() - now.getTime();
+        setTimeLeft({
+          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((diff / 1000 / 60) % 60),
+          seconds: Math.floor((diff / 1000) % 60)
+        });
+      } else if (now >= electionTime.start && now <= electionTime.end) {
+        setSystemStatus('LIVE');
+        setTimeLeft(null);
+      } else {
+        setSystemStatus('CLOSED');
+        setTimeLeft(null);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [electionTime]);
 
   const roles = [
     {
@@ -50,15 +104,10 @@ export default function LandingPage() {
     }
   ];
 
-
-
-
   return (
-    <main className=" bg-white">
-
+    <main className="bg-white">
       <div className="min-h-screen bg-slate-50">
-        {/* --- Hero Section --- */}
-        <section className="relative pt-20 pb-16 px-4 overflow-hidden">
+        <section className="relative pt-10 pb-16 px-4 overflow-hidden">
           <div className="max-w-7xl mx-auto text-center relative z-10">
             <div className="inline-block px-4 py-1.5 mb-6 bg-blue-50 text-blue-600 rounded-full text-xs font-black uppercase tracking-widest animate-bounce">
               E-VOTE 2026 is here
@@ -70,69 +119,102 @@ export default function LandingPage() {
               เริ่มที่เสียงของคุณ
             </h1>
 
-            {/* เงื่อนไขการแสดงปุ่มหรือข้อความขอบคุณ */}
-            <div className="mt-10">
-              {isLoggedIn && user?.has_voted ? (
-                /* กรณีที่ 1: Login แล้ว และลงคะแนนแล้ว */
-                <div className="animate-in fade-in zoom-in duration-500">
-                  <div className="inline-flex flex-col items-center p-8 bg-green-50 rounded-2xl border border-green-100 shadow-sm">
-                    <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white mb-4 shadow-lg shadow-green-100">
-                      <CheckCircle size={32} />
-                    </div>
-                    <h3 className="text-2xl font-black text-slate-800 mb-2">ท่านได้ใช้สิทธิ์ลงคะแนนเรียบร้อยแล้ว</h3>
-                    <p className="text-slate-500 mb-6 max-w-sm">
-                      ขอขอบคุณที่ร่วมเป็นส่วนหนึ่งในการขับเคลื่อนมหาวิทยาลัย <br />คะแนนของท่านถูกบันทึกเข้าสู่ระบบอย่างปลอดภัยแล้ว
-                    </p>
-                    <div className="flex items-center gap-2 text-red-600 font-bold">
-                      <Heart size={18} fill="currentColor" />
-                      <span className='text-green-600'>ขอบคุณสำหรับพลังเสียงของท่าน</span>
-                    </div>
-                  </div>
-                </div>
+            {/* --- ส่วนแสดงผล Countdown และปุ่ม Action --- */}
+            <div className="mt-10 flex flex-col items-center">
+              {loading ? (
+                <Loader2 className="animate-spin text-slate-300" size={32} />
               ) : (
-                /* กรณีที่ 2: ยังไม่ Login หรือยังไม่ได้ลงคะแนน */
-                <Link href={isLoggedIn ? "/voting" : "/login"}>
-                  <button className="group flex items-center gap-3 mx-auto bg-green-500 hover:bg-green-600 text-slate0 text-white px-10 py-4 rounded-2xl font-black text-xl transition-all shadow-2xl shadow-slate-200 active:scale-95">
-                    {isLoggedIn ? "เข้าสู่คูหาเลือกตั้ง" : "เข้าสู่ระบบเพื่อใช้สิทธิ์"}
-                    <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </Link>
+                <>
+                  {/* แสดง Countdown หากยังไม่ถึงเวลา */}
+                  {systemStatus === 'UPCOMING' && timeLeft && (
+                    <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                      <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px] mb-4">ระบบโหวตจะเปิดให้ใช้งานในอีก</p>
+                      <div className="flex gap-2 justify-center items-center">
+                        <CountdownBlock value={timeLeft.days} label="Days" />
+                        <span className="text-2xl font-black text-slate-300">:</span>
+                        <CountdownBlock value={timeLeft.hours} label="Hours" />
+                        <span className="text-2xl font-black text-slate-300">:</span>
+                        <CountdownBlock value={timeLeft.minutes} label="Mins" />
+                        <span className="text-2xl font-black text-slate-300">:</span>
+                        <CountdownBlock value={timeLeft.seconds} label="Secs" />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* เงื่อนไขการแสดงปุ่มตามสถานะระบบและ User */}
+                  <div className="flex flex-col items-center gap-6">
+                    {isLoggedIn && user?.has_voted ? (
+                      /* กรณีที่ลงคะแนนแล้ว */
+                      <div className="animate-in fade-in zoom-in duration-500">
+                        <div className="inline-flex flex-col items-center p-8 bg-green-50 rounded-[2.5rem] border border-green-100 shadow-sm">
+                          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center text-white mb-4 shadow-lg shadow-green-100">
+                            <CheckCircle size={32} />
+                          </div>
+                          <h3 className="text-2xl font-black text-slate-800 mb-2">ท่านได้ใช้สิทธิ์เรียบร้อยแล้ว</h3>
+                          <p className="text-slate-500 mb-4 max-w-sm text-sm">
+                            คะแนนของท่านถูกบันทึกเข้าสู่ระบบอย่างปลอดภัย <br />ขอบคุณที่ร่วมสร้างสรรค์มหาวิทยาลัยของเรา
+                          </p>
+                          <div className="flex items-center gap-2 text-green-600 font-black">
+                            <Heart size={18} fill="currentColor" />
+                            <span>ขอบคุณสำหรับพลังเสียง</span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : systemStatus === 'LIVE' ? (
+                      /* กรณีที่อยู่ในช่วงเวลาเลือกตั้ง */
+                      <Link href={isLoggedIn ? "/voting" : "/login"}>
+                        <button className="group flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-12 py-5 rounded-[2rem] font-black text-xl transition-all shadow-2xl shadow-green-200 active:scale-95 animate-pulse">
+                          เข้าสู่คูหาเลือกตั้ง
+                          <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                        </button>
+                      </Link>
+                    ) : systemStatus === 'UPCOMING' ? (
+                      /* กรณีที่ยังไม่ถึงเวลาเปิดหีบ - แสดงปุ่มตรวจสอบรายชื่อ */
+                      <Link href={isLoggedIn ? "/profile" : "/login"}>
+                        <button className="group flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-12 py-5 rounded-[2rem] font-black text-xl transition-all shadow-2xl shadow-blue-100 active:scale-95">
+                          <UserCheck size={24} />
+                          ตรวจสอบรายชื่อผู้มีสิทธิ์
+                          <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                        </button>
+                      </Link>
+                    ) : (
+                      /* กรณีที่ปิดการเลือกตั้งแล้ว */
+                      <div className="bg-slate-200 text-slate-500 px-10 py-5 rounded-3xl font-black text-xl">
+                        ปิดหีบเลือกตั้งเรียบร้อยแล้ว
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
             </div>
-            {/* {!user?.has_voted && (
-            <Link href={isLoggedIn ? "/candidates" : "/login"}>
-              <button className="group flex items-center gap-3 mx-auto bg-green-500 hover:bg-green-600 text-slate0 text-white px-10 py-4 rounded-2xl font-black text-xl transition-all shadow-2xl shadow-slate-200 active:scale-95">
-                {isLoggedIn ? "รายชื่อผู้สมัคร" : "เข้าสู่ระบบเพื่อตรวจสอบสิทธิ์"}
-                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-              </button>
-            </Link>
-            )} */}
           </div>
-
         </section>
 
         {/* --- Knowledge Section --- */}
-        <section className="py-14 bg-slate-100 ">
-          <p className="text-center mx-auto text-slate-400 font-medium md:text-lg mb-10 leading-relaxed">
-            ทำความรู้จักกับ 3 องค์กรหลักที่คุณต้องเลือกเข้าไปทำหน้าที่ <br className="hidden md:block" />
-            เพื่อรักษาผลประโยชน์และสร้างสรรค์กิจกรรมในรั้วเหลืองเทา
-          </p>
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4">
+             <div className="text-center mb-16">
+                <h2 className="text-3xl font-black text-slate-900 mb-4">ทำความรู้จักตำแหน่งที่เปิดรับเลือกตั้ง</h2>
+                <p className="text-slate-500 max-w-2xl mx-auto font-medium">
+                   ศึกษาบทบาทหน้าที่ของตัวแทนแต่ละองค์กร เพื่อประกอบการตัดสินใจ <br className="hidden md:block" />
+                   ก่อนเข้าสู่คูหาเลือกตั้งครั้งสำคัญในรั้วเหลืองเทา
+                </p>
+             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {roles.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`group bg-white rounded-[2.5rem] p-8 border ${item.borderColor} shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500`}
+                  className={`group bg-white rounded-[3rem] p-10 border ${item.borderColor} shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500`}
                 >
-                  <div className={`${item.lightColor} ${item.textColor} w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}>
+                  <div className={`${item.lightColor} ${item.textColor} w-16 h-16 rounded-2xl flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform duration-500`}>
                     {item.icon}
                   </div>
-                  <div className="mb-4">
-                    <span className={`text-[12px] font-black uppercase tracking-[0.2em] ${item.textColor}`}>
+                  <div className="mb-6">
+                    <span className={`text-[11px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full ${item.lightColor} ${item.textColor}`}>
                       {item.role}
                     </span>
-                    <h3 className="text-2xl font-black text-slate-900 mt-1">{item.title}</h3>
-                    <p className="text-[12px] font-bold text-slate-400 uppercase">{item.englishTitle}</p>
+                    <h3 className="text-2xl font-black text-slate-900 mt-4">{item.title}</h3>
+                    <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest">{item.englishTitle}</p>
                   </div>
                   <p className="text-slate-500 text-sm leading-relaxed mb-8 font-medium">
                     {item.description}
@@ -143,75 +225,21 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-        <section className="bg-slate-100 py-10 px-4">
-        </section>
-        {/* --- Simple Footer Info --- */}
-        {/* <section className="py-10 px-4">
-          <div className="p-10 max-w-4xl mx-auto bg-slate-900 rounded-[3rem] text-center text-white relative overflow-hidden shadow-2xl shadow-blue-200">
-            <div className="relative z-10">
-              <h2 className="text-3xl font-black mb-4">สรุปสั้นๆ ให้จำง่าย</h2>
-              <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12">
-                <SummaryBox title="องค์การฯ" desc="บริหารมหาวิทยาลัย" />
-                <div className="hidden md:block h-12 w-px bg-white/20" />
-                <SummaryBox title="สโมสรฯ" desc="บริหารคณะ" />
-                <div className="hidden md:block h-12 w-px bg-white/20" />
-                <SummaryBox title="สภานิสิต" desc="ตรวจสอบ" />
-              </div>
-            </div>
-          </div>
-        </section> */}
-
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </main>
   );
 }
 
-function NewsCard({ title, date, category }: any) {
+// --- คอมโพเนนต์ย่อยสำหรับ Countdown ---
+function CountdownBlock({ value, label }: { value: number, label: string }) {
   return (
-    <div className="group cursor-pointer">
-      <div className="aspect-video bg-slate-100 rounded-3xl mb-4 overflow-hidden relative">
-        <div className="absolute top-4 left-4 bg-white px-3 py-1 rounded-full text-[10px] font-black uppercase shadow-sm">
-          {category}
-        </div>
-        <div className="w-full h-full flex items-center justify-center text-slate-300">
-          <Newspaper size={48} />
-        </div>
+    <div className="flex flex-col items-center">
+      <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-3xl shadow-sm border border-slate-100 flex items-center justify-center mb-2">
+        <span className="text-3xl md:text-5xl font-black text-blue-600">
+          {String(value).padStart(2, '0')}
+        </span>
       </div>
-      <p className="text-slate-400 text-xs font-bold mb-2 flex items-center gap-2">
-        <Calendar size={12} /> {date}
-      </p>
-      <h3 className="text-lg font-bold text-slate-800 group-hover:text-blue-600 transition-colors leading-snug">
-        {title}
-      </h3>
-    </div>
-  );
-}
-
-function SummaryBox({ title, desc }: { title: string, desc: string }) {
-  return (
-    <div className="text-center">
-      <p className="text-blue-400 text-xs font-bold uppercase tracking-widest mb-1">{title}</p>
-      <p className="text-xl font-black text-white">{desc}</p>
+      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{label}</span>
     </div>
   );
 }

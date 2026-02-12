@@ -30,7 +30,7 @@ export default function AdminSidebar() {
       roleRequired: 'SUPER_ADMIN', // เฉพาะ SUPER_ADMIN เท่านั้น
       items: [
         { name: "สถานะการเลือกตั้ง", href: "/admin/settings", icon: Settings },
-        { name: "วันและเวลาเปิด-ปิด", href: "/admin/settings/timer", icon: Calendar },
+        { name: "วันและเวลาเปิด-ปิด", href: "/admin/settings/election", icon: Calendar },
       ]
     },
     {
