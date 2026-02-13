@@ -26,10 +26,18 @@ export default function AdminSidebar() {
       ]
     },
     {
+      title: "จัดการข้อมูล",
+      roleRequired: 'ADMIN', // ADMIN และ SUPER_ADMIN จะเห็นกลุ่มนี้
+      items: [
+        { name: "จัดการคณะ", href: "/admin/faculties", icon: School },
+        { name: "จัดการผู้สมัคร", href: "/admin/candidates", icon: Users },
+      ]
+    },
+    {
       title: "การตั้งค่าระบบ",
       roleRequired: 'SUPER_ADMIN', // เฉพาะ SUPER_ADMIN เท่านั้น
       items: [
-        { name: "สถานะการเลือกตั้ง", href: "/admin/settings", icon: Settings },
+        // { name: "สถานะการเลือกตั้ง", href: "/admin/settings", icon: Settings },
         { name: "วันและเวลาเปิด-ปิด", href: "/admin/settings/election", icon: Calendar },
       ]
     },
@@ -39,14 +47,6 @@ export default function AdminSidebar() {
       items: [
         { name: "ข้อมูลนิสิต", href: "/admin/users/students", icon: Users2 },
         { name: "ข้อมูลเจ้าหน้าที่", href: "/admin/users/staffs", icon: UserCog },
-      ]
-    },
-    {
-      title: "ข้อมูลพื้นฐาน",
-      roleRequired: 'SUPER_ADMIN',
-      items: [
-        { name: "จัดการคณะ", href: "/admin/faculties", icon: School },
-        { name: "จัดการผู้สมัคร", href: "/admin/candidates", icon: Users },
       ]
     },
   ];

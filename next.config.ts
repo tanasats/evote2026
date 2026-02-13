@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    output: 'export', //เพื่อสร้างโฟลเดอร์ out
   /* config options here */
   images: {
     domains: ['picsum.photos'],

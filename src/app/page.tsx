@@ -110,7 +110,7 @@ export default function LandingPage() {
         <section className="relative pt-10 pb-16 px-4 overflow-hidden">
           <div className="max-w-7xl mx-auto text-center relative z-10">
             <div className="inline-block px-4 py-1.5 mb-6 bg-blue-50 text-blue-600 rounded-full text-xs font-black uppercase tracking-widest animate-bounce">
-              E-VOTE 2026 is here
+              Election 2026 is here
             </div>
             <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-3 tracking-tighter">
               กำหนดอนาคต <span className="text-blue-600">มหาวิทยาลัย</span>

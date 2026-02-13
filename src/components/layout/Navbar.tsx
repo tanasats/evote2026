@@ -49,7 +49,7 @@ export default function Navbar() {
                 <Vote size={20} />
               </div>
               <span className="text-xl font-black text-slate-900 tracking-tighter">
-                E-VOTE <span className="text-blue-600">MSU</span>
+                Election <span className="text-blue-600">MSU</span>
               </span>
             </Link>
           </div>
