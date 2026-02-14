@@ -18,8 +18,8 @@ export default function AdminLayout({
   useEffect(() => {
     // 1. ตรวจสอบสถานะจาก Token/Cookie ใหม่เพื่อความชัวร์
     checkAuth();
-    
-    // ให้เวลา Zustand Rehydrate ข้อมูลสักครู่
+
+    // ให้เวลา Zustand Rehydrate ข้อมูลสักครู่ (ลดเวลาลงเพราะมี middleware ป้องกันแล้ว)
     const timer = setTimeout(() => {
       // 2. เช็คสิทธิ์: ต้อง Login และต้องเป็น ADMIN หรือ SUPER_ADMIN เท่านั้น
       // (เราอนุญาตให้ Admin เข้า Layout นี้ได้ แต่จะไปล็อคเมนูย่อยใน Sidebar แทน)
@@ -29,7 +29,7 @@ export default function AdminLayout({
         setIsAuthorized(true);
       }
       setLoading(false);
-    }, 500);
+    }, 100); // ลดจาก 500ms เป็น 100ms
 
     return () => clearTimeout(timer);
   }, [isLoggedIn, user?.role, router, checkAuth]);

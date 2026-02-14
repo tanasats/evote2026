@@ -1,8 +1,8 @@
-'use client'
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useVoteStore } from '@/store/useVoteStore'; // เพิ่มการดึง Store เข้ามา
+import { useVoteStore } from '@/store/useVoteStore';
+import { hasPermission } from '@/utils/rbac'; // เพิ่ม import
 import {
   Settings, Users, UserCog, School, Users2,
   Calendar, BarChart3, ChevronRight, Menu, X,
@@ -96,9 +96,8 @@ export default function AdminSidebar() {
         {/* Navigation Menu */}
         <nav className="space-y-6 overflow-y-auto max-h-[calc(100vh-160px)] custom-sidebar-scroll pr-2">
           {menuGroups.map((group, idx) => {
-            // --- Logic การเช็คสิทธิ์ (RBAC) ---
-            // 1. ถ้ากลุ่มต้องการ SUPER_ADMIN แต่ user เป็น ADMIN ให้ซ่อน
-            if (group.roleRequired === 'SUPER_ADMIN' && user?.role !== 'SUPER_ADMIN') {
+            // --- Logic การเช็คสิทธิ์ (RBAC) ใช้ utility function ---
+            if (!hasPermission(user?.role, group.roleRequired)) {
               return null;
             }
 

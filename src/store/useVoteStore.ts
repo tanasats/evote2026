@@ -2,16 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'; // ใช้ Persist แทนการเขียน Cookie แยก
 import { deleteCookie, getCookie } from 'cookies-next';
 import { jwtDecode } from 'jwt-decode';
-
-interface User {
-  id: string;
-  name: string;
-  email: string; // เพิ่ม email
-  role: 'MEMBER' | 'ADMIN' | 'SUPER_ADMIN'; // เพิ่ม role
-  faculty_code: string;
-  faculty_name: string;
-  has_voted: boolean;
-}
+import { User, JWTPayload } from '@/types/auth';
 
 interface VoteState {
   organizationId: number | null;
@@ -102,7 +93,7 @@ export const useVoteStore = create<VoteState>()(
         const token = getCookie('auth-token');
         if (token) {
           try {
-            const decoded: any = jwtDecode(token as string);
+            const decoded = jwtDecode<JWTPayload>(token as string);
             const currentTime = Date.now() / 1000;
 
             if (decoded.exp < currentTime) {
@@ -129,6 +120,7 @@ export const useVoteStore = create<VoteState>()(
               isLoggedIn: true,
             });
           } catch (e) {
+            console.error('JWT decode error:', e);
             deleteCookie('auth-token');
             set({ user: null, isLoggedIn: false });
           }
