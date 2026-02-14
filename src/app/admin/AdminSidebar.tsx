@@ -5,8 +5,9 @@ import { useVoteStore } from '@/store/useVoteStore';
 import { hasPermission } from '@/utils/rbac'; // เพิ่ม import
 import {
   Settings, Users, UserCog, School, Users2,
-  Calendar, BarChart3, ChevronRight, Menu, X,
-  Activity, Vote
+  Calendar, BarChart3, ChevronRight, Menu, X, Vote,
+  LayoutDashboard,
+  Upload
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -19,7 +20,7 @@ export default function AdminSidebar() {
       title: "รายงานและตรวจสอบ",
       roleRequired: 'ADMIN', // ADMIN และ SUPER_ADMIN จะเห็นกลุ่มนี้
       items: [
-        { name: "ผลคะแนน Real-time", href: "/admin/dashboard", icon: Activity },
+        { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
         { name: "รายงานองค์การนิสิต", href: "/admin/reports/organization", icon: BarChart3 },
         { name: "รายงานสโมสรนิสิต", href: "/admin/reports/club", icon: BarChart3 },
         { name: "รายงานสภานิสิต", href: "/admin/reports/council", icon: BarChart3 },
@@ -39,6 +40,7 @@ export default function AdminSidebar() {
       items: [
         // { name: "สถานะการเลือกตั้ง", href: "/admin/settings", icon: Settings },
         { name: "วันและเวลาเปิด-ปิด", href: "/admin/settings/election", icon: Calendar },
+        { name: "นำเข้าข้อมูลนิสิต", href: "/admin/students/import", icon: Upload },
       ]
     },
     {

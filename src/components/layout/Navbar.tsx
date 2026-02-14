@@ -142,7 +142,7 @@ export default function Navbar() {
 
 // --- Sub-components สำหรับแยก Logic ตาม Role ---
 
-function NavLinks({ has_voted, role, isMobile, currentPath }: { has_voted: boolean|undefined, role: string|undefined, isMobile?: boolean, currentPath: string }) {
+function NavLinks({ has_voted, role, isMobile, currentPath }: { has_voted: boolean | undefined, role: string | undefined, isMobile?: boolean, currentPath: string }) {
   const baseClass = isMobile
     ? "flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all "
     : "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ";
@@ -162,7 +162,7 @@ function NavLinks({ has_voted, role, isMobile, currentPath }: { has_voted: boole
       {/* สำหรับเจ้าหน้าที่ */}
       {(role === 'ADMIN' || role === 'SUPER_ADMIN') && (
         <Link href="/admin/dashboard" className={`${baseClass} ${currentPath.includes('/admin/dashboard') ? activeClass : inactiveClass}`}>
-          <LayoutDashboard size={18} /> Dashboard สรุปผล
+          <LayoutDashboard size={18} /> Dashboard
         </Link>
       )}
 
