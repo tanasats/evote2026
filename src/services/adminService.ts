@@ -156,6 +156,36 @@ const adminService = {
     }
   },
 
+  // ดึง Banner ทั้งหมด (สำหรับ Admin)
+  getBanners: async () => {
+    const res = await axiosInstance.get('/admin/banners');
+    return res.data;
+  },
+
+  // เพิ่มหรือแก้ไข Banner (ใช้ Multipart/form-data สำหรับอัปโหลดรูป)
+  saveBanner: async (formData: FormData, id?: number) => {
+    if (id) return (await axiosInstance.put(`/admin/banners/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data', }, })).data;
+    return (await axiosInstance.post('/admin/banners', formData, { headers: { 'Content-Type': 'multipart/form-data', }, })).data;
+  },
+
+  // deleteBanner: async (id: number) => {
+  //   return (await axiosInstance.delete(`/admin/banners/${id}`)).data;
+  // },
+  toggleBannerStatus: async (id: number, status: boolean) => {
+    const res = await axiosInstance.patch(`/admin/banners/${id}/status`, { is_active: status });
+    return res.data;
+  },
+
+  deleteBanner: async (id: number) => {
+    const res = await axiosInstance.delete(`/admin/banners/${id}`);
+    return res.data;
+  }
+
+
+
+
+
+
 
 
 };

@@ -7,7 +7,8 @@ import {
   Settings, Users, UserCog, School, Users2,
   Calendar, BarChart3, ChevronRight, Menu, X, Vote,
   LayoutDashboard,
-  Upload
+  Upload,
+  Megaphone
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -21,6 +22,12 @@ export default function AdminSidebar() {
       roleRequired: 'ADMIN', // ADMIN และ SUPER_ADMIN จะเห็นกลุ่มนี้
       items: [
         { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+      ]
+    },
+    {
+      title: "รายงานและตรวจสอบ",
+      roleRequired: 'SUPER_ADMIN', // ADMIN และ SUPER_ADMIN จะเห็นกลุ่มนี้
+      items: [
         { name: "รายงานองค์การนิสิต", href: "/admin/reports/organization", icon: BarChart3 },
         { name: "รายงานสโมสรนิสิต", href: "/admin/reports/club", icon: BarChart3 },
         { name: "รายงานสภานิสิต", href: "/admin/reports/council", icon: BarChart3 },
@@ -30,7 +37,8 @@ export default function AdminSidebar() {
       title: "จัดการข้อมูล",
       roleRequired: 'ADMIN', // ADMIN และ SUPER_ADMIN จะเห็นกลุ่มนี้
       items: [
-        { name: "จัดการคณะ", href: "/admin/faculties", icon: School },
+        // { name: "จัดการคณะ", href: "/admin/faculties", icon: School },
+        { name: "จัดการ Banner", href: "/admin/settings/banners", icon: Megaphone },
         { name: "จัดการผู้สมัคร", href: "/admin/candidates", icon: Users },
       ]
     },

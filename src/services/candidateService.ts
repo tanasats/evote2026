@@ -3,6 +3,7 @@ import axiosInstance from './axiosInstance';
 
 export interface CandidateFormData {
   name: string;
+  namegroup: string;
   candidate_number: number | string;
   type: 'ORGANIZATION' | 'COUNCIL' | 'CLUB';
   faculty_code?: string;
@@ -20,6 +21,7 @@ const candidateService = {
   create: async (data: CandidateFormData) => {
     const formData = new FormData();
     formData.append('name', data.name);
+    formData.append('namegroup', data.namegroup);
     formData.append('candidate_number', data.candidate_number.toString());
     formData.append('type', data.type);
     if (data.faculty_code) formData.append('faculty_code', data.faculty_code);
@@ -35,6 +37,7 @@ const candidateService = {
   update: async (id: number, data: CandidateFormData) => {
     const formData = new FormData();
     formData.append('name', data.name);
+    formData.append('namegroup', data.namegroup);
     formData.append('candidate_number', data.candidate_number.toString());
     formData.append('type', data.type);
     if (data.faculty_code) formData.append('faculty_code', data.faculty_code);

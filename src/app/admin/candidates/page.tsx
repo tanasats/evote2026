@@ -25,6 +25,7 @@ export default function CandidateManagement() {
     const [editingId, setEditingId] = useState<number | null>(null);
     const [formData, setFormData] = useState<CandidateFormData>({
         name: '',
+        namegroup: '',
         candidate_number: '',
         type: 'ORGANIZATION',
         faculty_code: '',
@@ -55,7 +56,7 @@ export default function CandidateManagement() {
     const filteredCandidates = useMemo(() => {
         return candidates.filter(can => {
             const matchSearch = can.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                can.candidate_number.toString() === searchTerm;
+                can.candidate_number.toString() === searchTerm;
             const matchType = filterType === 'ALL' || can.type === filterType;
             const matchFaculty = filterFaculty === 'ALL' || can.faculty_code === filterFaculty;
             return matchSearch && matchType && matchFaculty;
@@ -106,6 +107,7 @@ export default function CandidateManagement() {
         setEditingId(can.id);
         setFormData({
             name: can.name,
+            namegroup: can.namegroup,
             candidate_number: can.candidate_number,
             type: can.type,
             faculty_code: can.faculty_code || '',
@@ -115,7 +117,7 @@ export default function CandidateManagement() {
     };
 
     const resetForm = () => {
-        setFormData({ name: '', candidate_number: '', type: 'ORGANIZATION', faculty_code: '', image: null });
+        setFormData({ name: '', namegroup: '', candidate_number: '', type: 'ORGANIZATION', faculty_code: '', image: null });
         setPreview(null);
         setEditingId(null);
     };
@@ -148,10 +150,10 @@ export default function CandidateManagement() {
                 {/* Search */}
                 <div className="relative flex-1">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                    <input 
+                    <input
                         type="text"
                         placeholder="ค้นหาชื่อผู้สมัคร หรือหมายเลข..."
-                        className="w-full pl-12 pr-4 py-3 bg-slate-50 rounded-2xl border-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 placeholder:text-slate-300 transition-all"
+                        className="w-full pl-12 pr-4 py-3 bg-slate-100 rounded-2xl border-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700 placeholder:text-slate-300 transition-all"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -159,12 +161,12 @@ export default function CandidateManagement() {
 
                 {/* Filters */}
                 <div className="flex flex-wrap md:flex-nowrap gap-2">
-                    <select 
-                        className="flex-1 md:w-48 bg-slate-50 px-4 py-3 rounded-2xl border-none font-bold text-slate-600 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
+                    <select
+                        className="flex-1 md:w-48 bg-slate-100 px-4 py-3 rounded-2xl border-none font-bold text-slate-600 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
                         value={filterType}
                         onChange={(e) => {
                             setFilterType(e.target.value);
-                            if(e.target.value === 'ORGANIZATION') setFilterFaculty('ALL');
+                            if (e.target.value === 'ORGANIZATION') setFilterFaculty('ALL');
                         }}
                     >
                         <option value="ALL text-slate-400">ทุกประเภทองค์กร</option>
@@ -174,8 +176,8 @@ export default function CandidateManagement() {
                     </select>
 
                     {filterType !== 'ORGANIZATION' && (
-                        <select 
-                            className="flex-1 md:w-60 bg-slate-50 px-4 py-3 rounded-2xl border-none font-bold text-slate-600 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
+                        <select
+                            className="flex-1 md:w-60 bg-slate-100 px-4 py-3 rounded-2xl border-none font-bold text-slate-600 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
                             value={filterFaculty}
                             onChange={(e) => setFilterFaculty(e.target.value)}
                         >
@@ -188,13 +190,13 @@ export default function CandidateManagement() {
 
                     {/* View Toggle */}
                     <div className="flex bg-slate-100 p-1 rounded-xl">
-                        <button 
+                        <button
                             onClick={() => setViewMode('GRID')}
                             className={`p-2.5 rounded-lg transition-all ${viewMode === 'GRID' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-400'}`}
                         >
                             <LayoutGrid size={20} />
                         </button>
-                        <button 
+                        <button
                             onClick={() => setViewMode('TABLE')}
                             className={`p-2.5 rounded-lg transition-all ${viewMode === 'TABLE' ? 'bg-white shadow-sm text-blue-600' : 'text-slate-400'}`}
                         >
@@ -230,12 +232,13 @@ export default function CandidateManagement() {
                                             <span className="text-[9px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md uppercase tracking-wider">{can.type}</span>
                                         </div>
                                         <h3 className="text-xl font-black text-slate-900 line-clamp-1">{can.name}</h3>
+                                        <h4 className="text-xl text-slate-900 line-clamp-1">{can.namegroup}</h4>
                                         <p className="text-xs font-bold text-slate-400 uppercase tracking-widest truncate">{can.faculty_name || 'ส่วนกลาง'}</p>
                                     </div>
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => handleEdit(can)}
-                                            className="flex-1 bg-slate-50 hover:bg-blue-600 hover:text-white text-slate-600 py-3.5 rounded-2xl font-bold transition-all flex items-center justify-center gap-2"
+                                            className="flex-1 bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-600 py-3.5 rounded-2xl font-bold transition-all flex items-center justify-center gap-2"
                                         >
                                             <Pencil size={16} /> แก้ไข
                                         </button>
@@ -256,12 +259,12 @@ export default function CandidateManagement() {
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="bg-slate-50/50 border-b border-slate-100">
-                                        <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">เบอร์</th>
-                                        <th className="px-4 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">ผู้สมัคร</th>
-                                        <th className="px-4 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">ประเภท</th>
-                                        <th className="px-4 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">คณะ/สังกัด</th>
-                                        <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">การจัดการ</th>
+                                    <tr className="bg-indigo-100/50 border-b border-slate-100">
+                                        <th className="px-8 py-5 text-[14px] text-slate-600 uppercase tracking-widest">เบอร์</th>
+                                        <th className="px-4 py-5 text-[14px] text-slate-600 uppercase tracking-widest">ผู้สมัคร</th>
+                                        <th className="px-4 py-5 text-[14px] text-slate-600 uppercase tracking-widest">ประเภท</th>
+                                        <th className="px-4 py-5 text-[14px] text-slate-600 uppercase tracking-widest">คณะ/สังกัด</th>
+                                        <th className="px-8 py-5 text-[14px] text-slate-600 uppercase tracking-widest text-right">การจัดการ</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-50 font-medium">
@@ -276,22 +279,22 @@ export default function CandidateManagement() {
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-100 border border-slate-100 shrink-0">
                                                         {can.image_url ? (
-                                                             <img src={`${process.env.NEXT_PUBLIC_IMAGES_URL}${can.image_url}`} className="w-full h-full object-cover" />
+                                                            <img src={`${process.env.NEXT_PUBLIC_IMAGES_URL}${can.image_url}`} className="w-full h-full object-cover" />
                                                         ) : <ImageIcon className="w-full h-full p-2 text-slate-300" />}
                                                     </div>
                                                     <span className="font-bold text-slate-900">{can.name}</span>
                                                 </div>
                                             </td>
                                             <td className="px-4 py-4">
-                                                <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg uppercase">{can.type}</span>
+                                                <span className="text-[14px] text-blue-660 bg-blue-50 px-2.5 py-1 rounded-lg uppercase">{can.type}</span>
                                             </td>
                                             <td className="px-4 py-4">
                                                 <span className="text-sm text-slate-500">{can.faculty_name || 'ส่วนกลาง'}</span>
                                             </td>
                                             <td className="px-8 py-4 text-right">
                                                 <div className="flex justify-end gap-2">
-                                                    <button onClick={() => handleEdit(can)} className="p-2 text-slate-400 hover:text-blue-600 transition-colors"><Pencil size={18}/></button>
-                                                    <button onClick={() => handleDelete(can.id)} className="p-2 text-slate-400 hover:text-red-500 transition-colors"><Trash2 size={18}/></button>
+                                                    <button onClick={() => handleEdit(can)} className="p-2 text-slate-400 hover:text-blue-600 transition-colors"><Pencil size={18} /></button>
+                                                    <button onClick={() => handleDelete(can.id)} className="p-2 text-slate-400 hover:text-red-500 transition-colors"><Trash2 size={18} /></button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -303,7 +306,7 @@ export default function CandidateManagement() {
                 )
             ) : (
                 /* --- Empty State --- */
-                <div className="py-32 text-center bg-slate-50 rounded-[3rem] border border-dashed border-slate-200">
+                <div className="py-32 text-center bg-indigo-100 rounded-[3rem] border border-dashed border-slate-200">
                     <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
                         <Filter className="text-slate-200" size={32} />
                     </div>
@@ -324,20 +327,20 @@ export default function CandidateManagement() {
                                     <h2 className="text-3xl font-black text-slate-900">{editingId ? 'แก้ไขข้อมูล' : 'เพิ่มผู้สมัครใหม่'}</h2>
                                     <p className="text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">Candidate Profile</p>
                                 </div>
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="bg-slate-50 p-2 rounded-full text-slate-400 hover:text-slate-900 transition-colors"><X size={24} /></button>
+                                <button type="button" onClick={() => setIsModalOpen(false)} className="bg-indigo-100 p-2 rounded-full text-slate-400 hover:text-slate-900 transition-colors"><X size={24} /></button>
                             </div>
 
                             <div className="space-y-6">
                                 {/* Image Upload */}
                                 <div className="flex justify-center mb-6">
-                                    <div className="relative group cursor-pointer w-40 h-52 bg-slate-50 rounded-[2rem] border-4 border-dashed border-slate-100 flex items-center justify-center overflow-hidden transition-all hover:border-blue-200"
+                                    <div className="relative group cursor-pointer w-40 h-52 bg-indigo-100 rounded-[2rem] border-4 border-dashed border-slate-100 flex items-center justify-center overflow-hidden transition-all hover:border-blue-200"
                                         onClick={() => document.getElementById('file-input')?.click()}>
                                         {preview ? (
                                             <img src={preview} className="w-full h-full object-cover" />
                                         ) : (
                                             <div className="text-center">
                                                 <Upload className="mx-auto text-slate-200 mb-2" size={32} />
-                                                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">3:4 Portrait</span>
+                                                <span className="text-[14px] text-slate-600 uppercase tracking-widest">3:4 Portrait</span>
                                             </div>
                                         )}
                                         <div className="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -349,21 +352,26 @@ export default function CandidateManagement() {
 
                                 <div className="grid grid-cols-4 gap-4">
                                     <div className="col-span-1">
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2 block mb-2">เบอร์</label>
-                                        <input required type="number" className="w-full p-4 bg-slate-50 rounded-2xl font-black text-center text-xl text-blue-600 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all outline-none shadow-inner"
+                                        <label className="text-[14px] text-slate-600 uppercase tracking-[0.2em] ml-2 block mb-2">เบอร์</label>
+                                        <input required type="number" className="w-full p-4 bg-indigo-100 rounded-2xl font-black text-center text-xl text-blue-600 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all outline-none shadow-inner"
                                             value={formData.candidate_number} onChange={(e) => setFormData({ ...formData, candidate_number: e.target.value })} />
                                     </div>
                                     <div className="col-span-3">
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2 block mb-2">ชื่อผู้สมัคร / ชื่อพรรค</label>
-                                        <input required className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-800 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all outline-none"
+                                        <label className="text-[14px] text-slate-600 uppercase tracking-[0.2em] ml-2 block mb-2">ชื่อผู้สมัคร/ชื่อพรรค</label>
+                                        <input required className="w-full p-4 bg-indigo-100 rounded-2xl font-bold text-blue-600 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all outline-none"
                                             value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="กรอกชื่อที่ต้องการแสดง..." />
+                                    </div>
+                                    <div className="col-span-3">
+                                        <label className="text-[14px] text-slate-600 uppercase tracking-[0.2em] ml-2 block mb-2">ชื่อกลุ่ม</label>
+                                        <input className="w-full p-4 bg-indigo-100 rounded-2xl font-bold text-blue-600 border-2 border-transparent focus:border-blue-500 focus:bg-white transition-all outline-none"
+                                            value={formData.namegroup} onChange={(e) => setFormData({ ...formData, namegroup: e.target.value })} placeholder="กรอกชื่อที่ต้องการแสดง..." />
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2 block mb-2">ประเภทองค์กร</label>
-                                        <select className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 outline-none border-2 border-transparent focus:border-blue-500 appearance-none cursor-pointer"
+                                        <label className="text-[14px] text-slate-600 uppercase tracking-[0.2em] ml-2 block mb-2">ประเภทองค์กร</label>
+                                        <select className="w-full p-4 bg-indigo-100 rounded-2xl font-bold text-blue-600 outline-none border-2 border-transparent focus:border-blue-500 appearance-none cursor-pointer"
                                             value={formData.type} onChange={(e: any) => {
                                                 const val = e.target.value;
                                                 setFormData({ ...formData, type: val, faculty_code: val === 'ORGANIZATION' ? '' : formData.faculty_code });
@@ -374,10 +382,10 @@ export default function CandidateManagement() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2 block mb-2">สังกัดคณะ</label>
-                                        <select 
+                                        <label className="text-[14px] text-slate-600 uppercase tracking-[0.2em] ml-2 block mb-2">สังกัดคณะ</label>
+                                        <select
                                             disabled={formData.type === 'ORGANIZATION'}
-                                            className="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 outline-none border-2 border-transparent focus:border-blue-500 appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                                            className="w-full p-4 bg-indigo-100 rounded-2xl font-bold text-blue-600 outline-none border-2 border-transparent focus:border-blue-500 appearance-none cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                                             value={formData.faculty_code} onChange={(e) => setFormData({ ...formData, faculty_code: e.target.value })}>
                                             <option value="">-- ไม่ระบุคณะ --</option>
                                             {faculties.map(f => <option key={f.faculty_code} value={f.faculty_code}>{f.faculty_name}</option>)}

@@ -10,14 +10,14 @@ export default function Footer() {
       {/* <div className="max-w-7xl mx-auto px-4"> */}
       <div className="max-w-full mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8 border-b border-slate-300">
-          
+
           {/* ส่วนซ้าย: Copyright & Description */}
           <div className="max-w-sm">
             <h2 className="text-xl font-black text-slate-900 mb-2 tracking-tighter">
-              E-VOTE <span className="text-blue-600">2026</span>
+              ELECTION <span className="text-blue-600">2026</span>
             </h2>
             <p className="text-sm text-slate-500 leading-relaxed">
-              ระบบลงคะแนนเลือกตั้งออนไลน์ที่โปร่งใส ตรวจสอบได้ และมั่นคงปลอดภัย 
+              ระบบลงคะแนนเลือกตั้งออนไลน์ที่โปร่งใส ตรวจสอบได้ และมั่นคงปลอดภัย
               เพื่อก้าวต่อไปของประชาธิปไตยในสถานศึกษา
             </p>
           </div>
@@ -41,7 +41,7 @@ export default function Footer() {
                 </div>
               </div>
             </div>
-            
+
             <div>
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Support</h3>
               <ul className="text-sm font-medium text-slate-600 space-y-2">

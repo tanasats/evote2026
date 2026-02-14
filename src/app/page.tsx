@@ -1,27 +1,43 @@
 'use client'
 import Link from 'next/link';
 import { useVoteStore } from '@/store/useVoteStore';
-import { 
-  ArrowRight, Newspaper, Calendar, ShieldCheck, 
-  Heart, CheckCircle, LayoutGrid, GraduationCap, 
-  Clock, UserCheck, Loader2 
+import {
+  ArrowRight, Newspaper, Calendar, ShieldCheck,
+  Heart, CheckCircle, LayoutGrid, GraduationCap,
+  Clock, UserCheck, Loader2,
+  Instagram,
+  Facebook,
+  Mail,
+
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import adminService from '@/services/adminService';
+import publicService from '@/services/publicService';
 
 export default function LandingPage() {
   const { isLoggedIn, user, checkAuth } = useVoteStore();
-  
+
   // --- States สำหรับเวลา ---
-  const [electionTime, setElectionTime] = useState<{start: Date, end: Date} | null>(null);
-  const [timeLeft, setTimeLeft] = useState<{days: number, hours: number, minutes: number, seconds: number} | null>(null);
+  const [electionTime, setElectionTime] = useState<{ start: Date, end: Date } | null>(null);
+  const [timeLeft, setTimeLeft] = useState<{ days: number, hours: number, minutes: number, seconds: number } | null>(null);
   const [systemStatus, setSystemStatus] = useState<'UPCOMING' | 'LIVE' | 'CLOSED'>('UPCOMING');
   const [loading, setLoading] = useState(true);
+  // เพิ่มใน LandingPage Component
+  const [banners, setBanners] = useState<any[]>([]);
 
   useEffect(() => {
     checkAuth();
     fetchSystemSettings();
   }, [checkAuth]);
+
+  useEffect(() => {
+    const loadBanners = async () => {
+      const data = await publicService.getActiveBanners();
+      setBanners(data);
+    };
+    loadBanners();
+  }, []);
+
 
   // ดึงเวลาเปิด-ปิดจาก Database
   const fetchSystemSettings = async () => {
@@ -46,7 +62,7 @@ export default function LandingPage() {
 
     const timer = setInterval(() => {
       const now = new Date();
-      
+
       if (now < electionTime.start) {
         setSystemStatus('UPCOMING');
         const diff = electionTime.start.getTime() - now.getTime();
@@ -107,11 +123,31 @@ export default function LandingPage() {
   return (
     <main className="bg-white">
       <div className="min-h-screen bg-slate-50">
+
+
+        {/* ส่วน Banner ประชาสัมพันธ์ */}
+        {banners.length > 0 && (
+          <section className="w-full mx-auto">
+            <div className="relative overflow-hidden shadow-2xl shadow-blue-100 bg-slate-100">
+              {/* ในกรณีที่มีหลายรูป สามารถทำ Loop หรือใช้ Swiper ได้ */}
+              <img
+                src={`${process.env.NEXT_PUBLIC_IMAGES_URL}${banners[0].image_url}`}
+                className="w-full h-full object-cover transition-opacity duration-500"
+                alt={banners[0].title}
+              />
+            </div>
+          </section>
+        )}
+
+
         <section className="relative pt-10 pb-16 px-4 overflow-hidden">
           <div className="max-w-7xl mx-auto text-center relative z-10">
             <div className="inline-block px-4 py-1.5 mb-6 bg-blue-50 text-blue-600 rounded-full text-xs font-black uppercase tracking-widest animate-bounce">
               Election 2026 is here
             </div>
+
+
+
             <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-3 tracking-tighter">
               กำหนดอนาคต <span className="text-blue-600">มหาวิทยาลัย</span>
             </h1>
@@ -190,16 +226,31 @@ export default function LandingPage() {
           </div>
         </section>
 
+        <section className="py-6 bg-white">
+          <div className="max-w-7xl mx-auto px-4 flex justify-center text-slate-600">
+            <div>
+              <h3 className="text-3xl font-black text-slate-800 mb-2 tracking-tighter">คณะกรรมการการเลือกตั้ง</h3>
+              <p className="pl-6">
+                นายวีรภัทร บุญรัตน์ (ประธานกกต)  0994690837 <br />
+                นางสาวกัลย์สุดา อำไพ (ผู้ช่วยเลขา) 0985126134 <br />
+                <span className="flex items-center gap-2"><Facebook /> Facebook: <a href='https://www.facebook.com/profile.php?id=100064335000698' className="text-blue-600">เลือกตั้งองค์กรนิสิต มมส. MSU Election</a></span>
+                <span className="flex items-center gap-2"><Instagram /> Instagram : <a href='https://www.instagram.com/msu_election/' className="text-blue-600">MSU_ELECTION 2026</a></span>
+                <span className="flex items-center gap-2"><Mail /> Email: msusc@msu.ac.th</span>
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* --- Knowledge Section --- */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-slate-50">
           <div className="max-w-7xl mx-auto px-4">
-             <div className="text-center mb-16">
-                <h2 className="text-3xl font-black text-slate-900 mb-4">ทำความรู้จักตำแหน่งที่เปิดรับเลือกตั้ง</h2>
-                <p className="text-slate-500 max-w-2xl mx-auto font-medium">
-                   ศึกษาบทบาทหน้าที่ของตัวแทนแต่ละองค์กร เพื่อประกอบการตัดสินใจ <br className="hidden md:block" />
-                   ก่อนเข้าสู่คูหาเลือกตั้งครั้งสำคัญในรั้วเหลืองเทา
-                </p>
-             </div>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-black text-slate-800 mb-4">ทำความรู้จักตำแหน่งที่เปิดรับเลือกตั้ง</h2>
+              <p className="text-slate-500 max-w-2xl mx-auto font-medium">
+                ศึกษาบทบาทหน้าที่ของตัวแทนแต่ละองค์กร เพื่อประกอบการตัดสินใจ <br className="hidden md:block" />
+                ก่อนเข้าสู่คูหาเลือกตั้งครั้งสำคัญในรั้วเหลืองเทา
+              </p>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {roles.map((item, idx) => (
                 <div
@@ -225,8 +276,8 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-      </div>
-    </main>
+      </div >
+    </main >
   );
 }
 

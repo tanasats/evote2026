@@ -29,6 +29,7 @@ export default function AdminDashboard() {
     try {
       const data = await adminService.getDashboardStats();
       setStats(data);
+      console.log(data);
     } catch (err) {
       toast.error('ไม่สามารถโหลดข้อมูลสถิติได้');
     } finally {
@@ -177,7 +178,7 @@ export default function AdminDashboard() {
         {viewMode === 'GRID' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredFaculties.map((fac: any) => (
-              <FacultyProgressCard key={fac.name} faculty={fac} />
+              <FacultyProgressCard key={fac.faculty_code} faculty={fac} />
             ))}
           </div>
         ) : (
@@ -193,7 +194,7 @@ export default function AdminDashboard() {
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {filteredFaculties.map((fac: any) => (
-                  <tr key={fac.name} className="hover:bg-slate-50/50 transition-colors">
+                  <tr key={fac.faculty_code} className="hover:bg-slate-50/50 transition-colors">
                     <td className="px-8 py-5 font-bold text-slate-800">{fac.name}</td>
                     <td className="px-8 py-5 text-center font-mono font-bold text-slate-500">
                       <span className="text-slate-900">{fac.voted.toLocaleString()}</span> / {fac.total.toLocaleString()}

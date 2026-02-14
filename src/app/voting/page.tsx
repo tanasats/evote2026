@@ -4,18 +4,50 @@ import { useRouter } from 'next/navigation';
 import { useVoteStore } from '@/store/useVoteStore';
 import { voteService } from '@/services/voteService';
 import CandidateCard from '@/components/voting/CandidateCard';
-import { Send, AlertCircle, Check, CheckCircle } from 'lucide-react';
+import { Send, AlertCircle, Check, CheckCircle, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import publicService from '@/services/publicService';
 
 export default function SinglePageVoting() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-
   // Zustand State
   const {
     organizationId, clubId, councilIds,
     candidatesData, setVote, setCandidatesData
   } = useVoteStore();
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    const validateVotingPeriod = async () => {
+      try {
+        const period = await publicService.getVotingPeriod();
+        const now = new Date(period.serverTime); // ใช้เวลาจาก Server เท่านั้น
+        const start = new Date(period.start);
+        const end = new Date(period.end);
+
+        if (now < start) {
+          toast.error('ระบบยังไม่เปิดให้ลงคะแนน');
+          router.replace('/'); // ใช้ replace เพื่อไม่ให้กด back กลับมาหน้าเดิมได้
+          return;
+        }
+
+        if (now > end) {
+          toast.error('หมดเวลาลงคะแนนแล้ว');
+          router.replace('/');
+          return;
+        }
+
+        // หากเวลาถูกต้อง ให้ปิดสถานะการเช็คเพื่อให้แสดงหน้า UI การเลือกตั้ง
+        setChecking(false);
+      } catch (error) {
+        toast.error('ไม่สามารถตรวจสอบเวลาการลงคะแนนได้');
+        router.replace('/');
+      }
+    };
+
+    validateVotingPeriod();
+  }, [router]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +66,6 @@ export default function SinglePageVoting() {
       }
     };
     fetchData();
-    //}, [candidatesData, setCandidatesData]);
   }, []);
   // Logic สำหรับจัดการการเลือก (Single & Multiple Select)
   const handleToggle = (type: 'organizationId' | 'clubId' | 'councilIds', id: number) => {
@@ -63,6 +94,15 @@ export default function SinglePageVoting() {
   };
 
   if (loading) return <div className="flex justify-center items-center min-h-screen">กำลังเตรียมคูหา...</div>;
+
+  if (checking) {
+    return (
+      <div className="flex flex-col h-screen items-center justify-center bg-slate-50">
+        <Loader2 className="animate-spin text-blue-600 mb-4" size={48} />
+        <p className="text-slate-500 font-black">กำลังตรวจสอบสิทธิ์และระยะเวลาลงคะแนน...</p>
+      </div>
+    );
+  }
 
   return (
     <>
