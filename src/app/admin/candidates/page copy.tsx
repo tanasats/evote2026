@@ -19,6 +19,7 @@ export default function CandidateManagement() {
     const [editingId, setEditingId] = useState<number | null>(null);
     const [formData, setFormData] = useState<CandidateFormData>({
         name: '',
+        namegroup: '',
         candidate_number: '',
         type: 'ORGANIZATION',
         faculty_code: '',
@@ -90,6 +91,7 @@ export default function CandidateManagement() {
         setEditingId(can.id);
         setFormData({
             name: can.name,
+            namegroup: can.namegroup,
             candidate_number: can.candidate_number,
             type: can.type,
             faculty_code: can.faculty_code || '',
@@ -99,7 +101,7 @@ export default function CandidateManagement() {
     };
 
     const resetForm = () => {
-        setFormData({ name: '', candidate_number: '', type: 'ORGANIZATION', faculty_code: '', image: null });
+        setFormData({ name: '', namegroup: '', candidate_number: '', type: 'ORGANIZATION', faculty_code: '', image: null });
         setPreview(null);
         setEditingId(null);
     };
