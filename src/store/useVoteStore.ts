@@ -99,6 +99,7 @@ export const useVoteStore = create<VoteState>()(
             if (decoded.exp < currentTime) {
               //get().logout(); // ใช้ action logout ที่มีอยู่ --> มัน Error เลยใช้ข้างล่างแทน
               deleteCookie('auth-token');
+              localStorage.removeItem('vote-storage');
               set({ user: null, isLoggedIn: false });
               return;
             }

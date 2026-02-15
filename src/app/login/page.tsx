@@ -78,7 +78,7 @@ export default function LoginPage() {
     <main className="flex flex-col items-center justify-center  bg-slate-50 py-20 px-6">
       <div className="max-w-md w-full bg-white p-10 rounded-3xl shadow-xl border border-slate-100 text-center">
         <div className="flex items-center justify-center text-blue-700"><Vote size={80} /></div>
-        <h1 className="text-4xl font-black text-slate-800 mb-2">E-VOTE <span className='text-blue-600'>2026</span></h1>
+        <h1 className="text-4xl font-black text-slate-800 mb-2">ELECTION <span className='text-blue-600'>2026</span></h1>
         <p className="text-slate-500 mb-8 font-medium">ระบบลงคะแนนเลือกตั้งออนไลน์</p>
 
         <div className="bg-blue-50 p100/50 p-6 rounded-2xl mb-8">
