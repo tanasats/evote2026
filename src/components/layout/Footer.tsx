@@ -14,7 +14,7 @@ export default function Footer() {
           {/* ส่วนซ้าย: Copyright & Description */}
           <div className="max-w-sm">
             <h2 className="text-xl font-black text-slate-900 mb-2 tracking-tighter">
-              ELECTION <span className="text-slate-400 text-sm">V0.6-Build 1</span>
+              ELECTION <span className="text-slate-400 text-sm font-light italic">version 1.0.0</span>
             </h2>
             <p className="text-sm text-slate-500 leading-relaxed">
               ระบบลงคะแนนเลือกตั้งออนไลน์ที่โปร่งใส ตรวจสอบได้ และมั่นคงปลอดภัย
@@ -35,7 +35,7 @@ export default function Footer() {
                   <Link href="#" className="text-slate-400 hover:text-slate-900 transition-colors">
                     <Globe size={18} />
                   </Link>
-                  <Link href="mailto:dev@university.ac.th" className="text-slate-400 hover:text-slate-900 transition-colors">
+                  <Link href="mailto:tanasat.s@msu.ac.th" className="text-slate-400 hover:text-slate-900 transition-colors">
                     <Mail size={18} />
                   </Link>
                 </div>
