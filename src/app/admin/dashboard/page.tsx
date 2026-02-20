@@ -141,7 +141,7 @@ export default function AdminDashboard() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
           <div>
             <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-              <BarChart3 className="text-blue-600" /> สถานะเป้าหมายรายคณะ (เป้าหมายร้อยละ 50)
+              <BarChart3 className="text-blue-600" /> สถานะเป้าหมายรายคณะ (เป้าหมายร้อยละ 20)
             </h2>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Faculty Progress Monitoring</p>
           </div>
@@ -189,7 +189,7 @@ export default function AdminDashboard() {
                   <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">คณะ</th>
                   <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">มาใช้สิทธิ์ / ทั้งหมด</th>
                   <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">ร้อยละ</th>
-                  <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">สถานะเทียบกับเป้าหมาย 50%</th>
+                  <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">สถานะนผู้มาใช้สิทธิ์</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -200,7 +200,7 @@ export default function AdminDashboard() {
                       <span className="text-slate-900">{fac.voted.toLocaleString()}</span> / {fac.total.toLocaleString()}
                     </td>
                     <td className="px-8 py-5 text-center">
-                      <span className={`font-black ${fac.percent >= 50 ? 'text-emerald-600' : 'text-blue-600'}`}>
+                      <span className={`font-black ${fac.percent >= 20 ? 'text-emerald-600' : 'text-blue-600'}`}>
                         {fac.percent}%
                       </span>
                     </td>
@@ -208,13 +208,13 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-4">
                         <div className="flex-1 bg-slate-100 h-3 rounded-full overflow-hidden relative">
                           <div
-                            className={`h-full transition-all duration-1000 ${fac.percent >= 50 ? 'bg-emerald-500' : 'bg-blue-500'}`}
-                            style={{ width: `${Math.min((fac.percent / 50) * 100, 100)}%` }}
+                            className={`h-full transition-all duration-1000 ${fac.percent >= 20 ? 'bg-emerald-500' : 'bg-blue-500'}`}
+                            style={{ width: `${Math.min((fac.percent), 100)}%` }}
                           />
                         </div>
-                        <span className="text-[10px] font-black text-slate-400 w-10">
-                          {Math.min((fac.percent / 50) * 100, 100).toFixed(0)}%
-                        </span>
+                        {/* <span className="text-[10px] font-black text-slate-400 w-10">
+                          {Math.min((fac.percent), 100).toFixed(0)}%
+                        </span> */}
                       </div>
                     </td>
                   </tr>
@@ -252,9 +252,9 @@ function MetricCard({ icon, label, value, unit, sub, color }: any) {
 }
 
 function FacultyProgressCard({ faculty }: { faculty: any }) {
-  const isGoalReached = faculty.percent >= 50;
+  const isGoalReached = faculty.percent >= 20;
   // Progress bar logic: 100% of bar = 50% turnout
-  const progressToGoal = Math.min((faculty.percent / 50) * 100, 100);
+  const progressToGoal = Math.min((faculty.percent), 100);
 
   return (
     <div className="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-2xl transition-all group relative overflow-hidden">
@@ -296,8 +296,8 @@ function FacultyProgressCard({ faculty }: { faculty: any }) {
         {/* Progress Logic: Target 50% focus */}
         <div className="space-y-2">
           <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
-            <span className="text-slate-300">0%</span>
-            <span className="text-slate-900">Target 50%</span>
+            <span className="text-slate-700">0%</span>
+            <span className="text-slate-700">100%</span>
           </div>
           <div className="relative w-full h-5 bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 p-1">
             <div
@@ -305,13 +305,14 @@ function FacultyProgressCard({ faculty }: { faculty: any }) {
               style={{ width: `${progressToGoal}%` }}
             />
           </div>
-          {faculty.percent < 50 ? (
+          {faculty.percent < 20 ? (
             <div className="flex items-center gap-1.5 justify-end text-red-500">
+              <span className='text-[12px] font-black italic'>เป้าหมาย 20%</span>
               <AlertCircle size={10} />
-              <span className="text-[10px] font-black italic">ขาดอีก {Math.ceil((faculty.total * 0.5) - faculty.voted).toLocaleString()} คน</span>
+              <span className="text-[12px] font-black italic">ขาดอีก {Math.ceil((faculty.total * 0.2) - faculty.voted).toLocaleString()} คน</span>
             </div>
           ) : (
-            <p className="text-[10px] text-emerald-500 font-black italic text-right flex items-center gap-1 justify-end">
+            <p className="text-[12px] text-emerald-500 font-black italic text-right flex items-center gap-1 justify-end">
               <ArrowUpRight size={10} /> เกินเป้าหมายขั้นต่ำแล้ว
             </p>
           )}

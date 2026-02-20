@@ -106,10 +106,10 @@ export default function LandingPage() {
       role: "ฝ่ายบริหารระดับคณะ",
       description: "ทำหน้าที่ดูแลกิจกรรมและสวัสดิการนิสิต 'ภายในคณะ' ตนเอง ประสานงานระหว่างนิสิตกับคณะ และเป็นผู้ขับเคลื่อนกิจกรรมสร้างสรรค์ตามอัตลักษณ์ของแต่ละคณะ",
       icon: <GraduationCap size={32} />,
-      color: "bg-ballot-blue",
-      lightColor: "bg-ballot-blue/50",
+      color: "bg-ballot-pink",
+      lightColor: "bg-ballot-pink/50",
       textColor: "text-slate-600",
-      borderColor: "border-ballot-blue"
+      borderColor: "border-ballot-pink"
     },
     {
       title: "สภานิสิต",
@@ -117,10 +117,10 @@ export default function LandingPage() {
       role: "ฝ่ายนิติบัญญัติ & ตรวจสอบ",
       description: "ทำหน้าที่คล้าย 'สภาผู้แทนราษฎร' เป็นกระบอกเสียงตรวจสอบการทำงานขององค์การนิสิต พิจารณางบประมาณ และดูแลสิทธิสวัสดิภาพของนิสิตทุกคน",
       icon: <ShieldCheck size={32} />,
-      color: "bg-ballot-pink",
-      lightColor: "bg-ballot-pink/50",
+      color: "bg-ballot-blue",
+      lightColor: "bg-ballot-blue/50",
       textColor: "text-slate-600",
-      borderColor: "border-ballot-pink"
+      borderColor: "border-ballot-blue"
     }
   ];
 
@@ -213,7 +213,7 @@ export default function LandingPage() {
                       <Link href={isLoggedIn ? "/profile" : "/login"}>
                         <button className="group flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-12 py-5 rounded-[2rem] font-black text-xl transition-all shadow-2xl shadow-blue-100 active:scale-95">
                           <UserCheck size={24} />
-                          ตรวจสอบรายชื่อผู้มีสิทธิ์
+                          ตรวจสอบสิทธิ์เลือกตั้ง
                           <ArrowRight className="group-hover:translate-x-2 transition-transform" />
                         </button>
                       </Link>

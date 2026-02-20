@@ -14,7 +14,7 @@ export default function Footer() {
           {/* ส่วนซ้าย: Copyright & Description */}
           <div className="max-w-sm">
             <h2 className="text-xl font-black text-slate-900 mb-2 tracking-tighter">
-              ELECTION <span className="text-slate-400 text-sm font-light italic">version 1.0.0</span>
+              ELECTION <span className="text-slate-400 text-sm font-light italic">version 1.0.1</span>
             </h2>
             <p className="text-sm text-slate-500 leading-relaxed">
               ระบบลงคะแนนเลือกตั้งออนไลน์ที่โปร่งใส ตรวจสอบได้ และมั่นคงปลอดภัย
